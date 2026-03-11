@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  //output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  CLIENT
+  PROVIDER
+  ADMIN
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  phone    String
+  password String
+  role     Role   @default(CLIENT)
+
+  pets           Pet[]
+  establishments Establishment[]
+  quotes         Quote[]
+
+  createdAt DateTime @default(now())
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Establishment {
+  id          String  @id @default(uuid())
+  name        String
+  location    String
+  description String?
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  services Service[]
+  quotes   Quote[]
+
+  createdAt DateTime @default(now())
+}
+
+enum Sex {
+  HEMBRA
+  MACHO
+}
+
+enum Specie {
+  CAT
+  DOG
+}
+
+model Breed {
+  id      Int    @id @default(autoincrement())
+  species Specie
+  name    String
+
+  pets Pet[]
+}
+
+model Pet {
+  id        String  @id @default(uuid())
+  name      String
+  age       Int
+  sex       Sex
+  allergies String?
+
+  breedId Int
+  breed   Breed @relation(fields: [breedId], references: [id])
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  quotes Quote[]
+
+  createdAt DateTime @default(now())
+}
+
+model Service {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id])
+
+  quotes Quote[]
+}
+
+enum QuoteStatus {
+  PENDING
+  ACCEPTED
+  COMPLETED
+  CANCELLED
+}
+
+model Quote {
+  id     String      @id @default(uuid())
+  date   DateTime
+  status QuoteStatus @default(PENDING)
+
+  petId String
+  pet   Pet    @relation(fields: [petId], references: [id])
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  clientId String
+  client   User   @relation(fields: [clientId], references: [id])
+
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id])
+
+  createdAt DateTime @default(now())
+}
