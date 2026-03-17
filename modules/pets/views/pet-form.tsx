@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { ArrowLeftIcon, CameraIcon } from "@heroicons/react/24/solid"
 
 export default function PetForm(){
 
@@ -9,13 +10,14 @@ export default function PetForm(){
     age:0,
     sex:"MACHO",
     breedId:0,
-    ownerId:""
+    ownerId:"",
+    allergies:"",
+    vaccines:""
   })
 
   const [message, setMessage] = useState("")
 
   async function handleSubmit(e:any){
-
     e.preventDefault()
 
     try {
@@ -29,101 +31,126 @@ export default function PetForm(){
 
       if (res.ok) {
         setMessage("Mascota creada correctamente")
-        setForm({
-          name:"",
-          age:0,
-          sex:"MACHO",
-          breedId:0,
-          ownerId:""
-        })
       } else {
         setMessage("Error al crear mascota")
       }
     } catch (error) {
       setMessage("Error al conectar con el servidor")
     }
-
   }
 
   return(
-    <div className="form-container">
-      <div className="form-wrapper">
-        <div className="form-logo">
-          <img src="/Logo-JAY-SF.jpg" alt="Elegancia Canina" />
+    <div className="min-h-screen flex items-center justify-center bg-[#0b2c4d]">
+
+      <div className="bg-[#12395f] w-[380px] rounded-2xl shadow-2xl p-6 text-white relative">
+
+        {/* Botón regresar */}
+        <button className="absolute top-4 left-4 bg-[#1e4a73] p-2 rounded-full hover:bg-[#2a5d8f] transition">
+          <ArrowLeftIcon className="w-5 h-5 text-white"/>
+        </button>
+
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          <img 
+            src="/Logo-JAY-SF.jpg" 
+            alt="logo"
+            className="w-20 h-20 rounded-full border-4 border-gray-300"
+          />
         </div>
 
-        <h1 className="form-title">Registrar Mascota</h1>
-        <p className="form-subtitle">Agrega a tu peludo</p>
+        {/* Imagen */}
+        <div className="border border-gray-400 rounded-xl p-6 flex justify-center items-center mb-4 hover:bg-[#1e4a73] cursor-pointer transition">
+          <CameraIcon className="w-10 h-10 text-gray-300"/>
+        </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
 
-          <div className="form-group">
-            <label>Nombre de la Mascota</label>
+          <div>
+            <label className="text-sm">Nombre de la mascota:</label>
             <input
-            type="text"
-            placeholder="Nombre de la mascota"
-            value={form.name}
-            onChange={(e)=>setForm({...form,name:e.target.value})}
-            required
+              className="w-full p-2 rounded-lg bg-[#1e4a73] border border-gray-400 mt-1 focus:outline-none"
+              placeholder="Coloca su nombre"
+              value={form.name}
+              onChange={(e)=>setForm({...form,name:e.target.value})}
             />
           </div>
 
-          <div className="form-group">
-            <label>Edad</label>
+          <div>
+            <label className="text-sm">Especie:</label>
             <input
-            type="number"
-            placeholder="Edad en años"
-            value={form.age}
-            onChange={(e)=>setForm({...form,age:Number(e.target.value)})}
-            min="0"
+              className="w-full p-2 rounded-lg bg-[#1e4a73] border border-gray-400 mt-1"
+              placeholder="Perro / Gato"
             />
           </div>
 
-          <div className="form-group">
-            <label>Sexo</label>
-            <select
-            value={form.sex}
-            onChange={(e)=>setForm({...form,sex:e.target.value})}
-            >
-              <option value="MACHO">Macho</option>
-              <option value="HEMBRA">Hembra</option>
-            </select>
+          {/* Fila */}
+          <div className="flex gap-2">
+
+            <div className="flex-1">
+              <label className="text-sm">Raza:</label>
+              <input
+                className="w-full p-2 rounded-lg bg-[#1e4a73] border border-gray-400 mt-1"
+                placeholder="Raza"
+              />
+            </div>
+
+            <div className="w-20">
+              <label className="text-sm">Edad:</label>
+              <input
+                type="number"
+                className="w-full p-2 rounded-lg bg-[#1e4a73] border border-gray-400 mt-1"
+                value={form.age}
+                onChange={(e)=>setForm({...form,age:Number(e.target.value)})}
+              />
+            </div>
+
+            <div className="w-24">
+              <label className="text-sm">Sexo:</label>
+              <select
+                className="w-full p-2 rounded-lg bg-[#1e4a73] border border-gray-400 mt-1"
+                value={form.sex}
+                onChange={(e)=>setForm({...form,sex:e.target.value})}
+              >
+                <option value="MACHO">Macho</option>
+                <option value="HEMBRA">Hembra</option>
+              </select>
+            </div>
+
           </div>
 
-          <div className="form-group">
-            <label>ID de Raza</label>
-            <input
-            type="number"
-            placeholder="ID de la raza"
-            value={form.breedId}
-            onChange={(e)=>setForm({...form,breedId:Number(e.target.value)})}
+          {/* Textareas */}
+          <div className="flex gap-2">
+
+            <textarea
+              className="w-1/2 p-2 rounded-lg bg-[#1e4a73] border border-gray-400"
+              placeholder="Alergias"
+              onChange={(e)=>setForm({...form,allergies:e.target.value})}
             />
-          </div>
 
-          <div className="form-group">
-            <label>ID del Propietario</label>
-            <input
-            type="text"
-            placeholder="ID del propietario"
-            value={form.ownerId}
-            onChange={(e)=>setForm({...form,ownerId:e.target.value})}
-            required
+            <textarea
+              className="w-1/2 p-2 rounded-lg bg-[#1e4a73] border border-gray-400"
+              placeholder="Vacunas"
+              onChange={(e)=>setForm({...form,vaccines:e.target.value})}
             />
+
           </div>
 
-          <button type="submit">
-            Crear Mascota
+          <button
+            type="submit"
+            className="bg-gray-400 py-3 rounded-lg mt-4 hover:bg-gray-500 transition font-semibold"
+          >
+            Crear Perfil de Mascota
           </button>
 
         </form>
 
         {message && (
-          <div className={`form-message ${message.includes("correctamente") ? "message-success" : "message-error"}`}>
+          <p className="text-center mt-3 text-sm">
             {message}
-          </div>
+          </p>
         )}
+
       </div>
     </div>
   )
-
 }
