@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LockClosedIcon } from "@heroicons/react/24/solid"; 
+import { LockClosedIcon } from "@heroicons/react/24/solid";
 
 export default function RegisterForm() {
   const [form, setForm] = useState({
@@ -48,12 +48,7 @@ export default function RegisterForm() {
     <div className="min-h-screen flex items-center justify-center bg-[#2c3e50] p-4 box-border"> {/* Fondo oscuro */}
       <div className="bg-[#1a252f] p-8 rounded-lg shadow-xl max-w-md w-full text-center text-white border border-[#34495e]"> {/* Contenedor del formulario */}
         <div className="flex justify-center mb-5">
-          {/* Si tienes el logo, puedes incluirlo aquí. Si no, puedes omitirlo o usar un placeholder. */}
-          {/* <img src="/Logo-JAY-SF.jpg" alt="Logo" className="w-24 h-24 rounded-full border-4 border-[#3498db]"/> */}
-          {/* Si no tienes el logo, puedes usar un icono o simplemente omitir esta sección */}
-          <div className="w-24 h-24 rounded-full bg-[#3498db] flex items-center justify-center text-4xl font-bold text-white">
-            JAY {/* Placeholder para el logo */}
-          </div>
+          <img src="/Logo-JAY-SF.jpg" alt="Logo" className="w-24 h-24 rounded-full border-4 border-[#3498db] object-cover" />
         </div>
 
         <h1 className="text-4xl font-bold mb-2 text-white">Registro</h1>
@@ -133,11 +128,10 @@ export default function RegisterForm() {
         </form>
 
         {message && (
-          <div className={`mt-6 p-3 rounded-lg text-sm ${
-            message.includes("correctamente")
+          <div className={`mt-6 p-3 rounded-lg text-sm ${message.includes("correctamente")
               ? "bg-green-500 text-white"
               : "bg-red-500 text-white"
-          }`}>
+            }`}>
             {message}
           </div>
         )}
