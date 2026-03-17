@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import { clientRepository } from "../infrastructure/client.repository"
 
-export async function createClient(data: {
+export async function createClientUseCase (data: {
   name: string
   email: string
   phone: string

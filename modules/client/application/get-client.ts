@@ -1,6 +1,6 @@
 import { clientRepository } from "../infrastructure/client.repository"
 
-export async function getClientById(id: string) {
+export async function getClientByIdUseCase(id: string) {
 
   const client = await clientRepository.findById(id)
 
