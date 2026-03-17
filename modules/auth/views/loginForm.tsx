@@ -29,26 +29,50 @@ export default function LoginForm(){
   }
 
   return(
+    <div className="form-container">
+      <div className="form-wrapper">
+        <div className="form-logo">
+          <img src="/Logo-JAY-SF.jpg" alt="Elegancia Canina" />
+        </div>
+        
+        <h1 className="form-title">Iniciar Sesión</h1>
+        <p className="form-subtitle">Bienvenido de nuevo</p>
 
-    <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
 
-      <input
-      placeholder="Email"
-      onChange={(e)=>setEmail(e.target.value)}
-      />
+          <div className="form-group">
+            <label>Correo Electrónico</label>
+            <input
+            type="email"
+            placeholder="tu@email.com"
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
+            required
+            />
+          </div>
 
-      <input
-      type="password"
-      placeholder="Password"
-      onChange={(e)=>setPassword(e.target.value)}
-      />
+          <div className="form-group">
+            <label>Contraseña</label>
+            <input
+            type="password"
+            placeholder="Tu contraseña"
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
+            required
+            />
+          </div>
 
-      <button>
-        Login
-      </button>
+          <button type="submit">
+            Entrar
+          </button>
 
-    </form>
+        </form>
 
+        <p className="form-link">
+          ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+        </p>
+      </div>
+    </div>
   )
 
 }
