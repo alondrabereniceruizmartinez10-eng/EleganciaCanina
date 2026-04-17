@@ -1,9 +1,9 @@
-import { createEstablishment } from "../application/create-establishment"
-import { getEstablishments } from "../application/get-establishments"
+import { createEstablishmentUseCase } from "../application/create-establishment"
+import { getEstablishmentsUseCase } from "../application/get-establishments"
 
 export async function createEstablishmentController(body:any){
 
-  const establishment = await createEstablishment(body)
+  const establishment = await createEstablishmentUseCase(body)
 
   return establishment
 
@@ -11,6 +11,6 @@ export async function createEstablishmentController(body:any){
 
 export async function listEstablishmentsController(){
 
-  return getEstablishments()
+  return await getEstablishmentsUseCase()
 
 }
