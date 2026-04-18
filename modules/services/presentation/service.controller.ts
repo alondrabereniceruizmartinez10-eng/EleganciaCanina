@@ -1,21 +1,22 @@
-import { createService } from "../application/create-service"
-import { getServices } from "../application/get-services"
-import { getService } from "../application/get-service"
+import { createServiceUseCasea } from "../application/create-service"
+import { getServiceUseCase } from "../application/get-service"
+import { getServicesUseCase } from "../application/get-services"
+
 
 export async function createServiceController(body:any){
 
-  return await createService(body)
+  return await createServiceUseCasea(body)
 
 }
 
 export async function listServicesController(){
 
-  return await getServices()
+  return await getServicesUseCase()
 
 }
 
 export async function getServiceController(id:string){
 
-  return await getService(id)
+  return await getServiceUseCase(id)
 
 }
