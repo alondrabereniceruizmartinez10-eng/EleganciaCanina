@@ -7,7 +7,7 @@ export default function ServiceForm(){
   const [form,setForm]=useState({
     name:"",
     description:"",
-    price:0,
+    price:"", // 👈 string para formato
     establishmentId:""
   })
 
@@ -15,132 +15,187 @@ export default function ServiceForm(){
 
   const services = ["Baño", "Corte", "Peluquería", "Spa"]
 
+  // 🔥 Formatear a moneda
+  function formatCurrency(value: string) {
+    const number = Number(value) / 100
+    return number.toLocaleString("es-MX", {
+      style: "currency",
+      currency: "MXN"
+    })
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault()
 
     try {
+
+      // 🔥 Convertir a número real antes de enviar
+      const cleanPrice = Number(form.price.replace(/[^0-9.-]+/g,"")) / 100
+
       const res = await fetch("/api/services",{
         method:"POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body:JSON.stringify(form)
+        body:JSON.stringify({
+          ...form,
+          price: cleanPrice
+        })
       })
 
       if (res.ok) {
         setMessage("Servicio creado correctamente")
+
         setForm({
           name:"",
           description:"",
-          price:0,
+          price:"",
           establishmentId:""
         })
       } else {
         setMessage("Error al crear servicio")
       }
+
     } catch (error) {
       setMessage("Error al conectar con el servidor")
     }
   }
 
   return(
-    <div className="flex items-center justify-center min-h-screen bg-gray-200">
+    <div className="min-h-screen bg-[#0f2f4a] flex flex-col items-center">
 
-      <div className="bg-[#1f3b57] w-[380px] rounded-2xl shadow-xl p-6 text-white">
+      {/* HEADER */}
+      <div className="w-full bg-[#2f4f6b] h-[90px] flex items-center justify-center relative">
 
-        <div className="flex flex-col items-center mb-4">
-          <img 
-            src="/Logo-JAY-SF.jpg" 
-            className="w-20 h-20 rounded-full mb-2"
-          />
-          <h1 className="text-2xl font-semibold">Nuevo Servicio</h1>
-          <p className="text-xs text-gray-300">Añade un nuevo servicio</p>
+        {/* BOTÓN ATRÁS */}
+        <div className="absolute left-5">
+          <button className="w-12 h-12 rounded-full bg-[#9fb3c8] flex items-center justify-center text-xl">
+            ←
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
+        {/* LOGO */}
+        <img 
+          src="/Logo-JAY-SF.jpg"
+          className="w-16 h-16 rounded-full object-cover"
+        />
+      </div>
 
-          {/* SELECT */}
-          <div className="w-[90%]">
-            <label className="text-xs text-gray-300">Nombre del Servicio</label>
+      {/* FORM */}
+      <form 
+        onSubmit={handleSubmit} 
+        className="w-full max-w-5xl bg-[#123a5a] p-8 grid grid-cols-2 gap-6"
+      >
+
+        {/* IZQUIERDA */}
+        <div className="flex flex-col gap-4">
+
+          {/* SERVICIO */}
+          <div>
+            <label className="text-white font-semibold">
+              Nombre del servicio :
+            </label>
+
             <select
               value={form.name}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setForm({...form, name: e.target.value})
-              }
-              className="w-full mt-1 bg-transparent border border-gray-400 rounded-md p-2 text-sm text-white focus:outline-none focus:border-white"
+              onChange={(e)=>setForm({...form,name:e.target.value})}
+              className="w-full mt-2 p-3 rounded-md bg-[#244a6a] text-white border border-gray-400"
               required
             >
-              <option value="" className="text-black">Selecciona un servicio</option>
-              {services.map((service, index)=>(
-                <option key={index} value={service} className="text-black">
-                  {service}
+              <option value="" className="text-black">
+                Selecciona un servicio
+              </option>
+
+              {services.map((s,i)=>(
+                <option key={i} value={s} className="text-black">
+                  {s}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* DESCRIPCIÓN */}
-          <div className="w-[90%]">
-            <label className="text-xs text-gray-300">Descripción</label>
-            <textarea
-              value={form.description}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                setForm({...form, description: e.target.value})
-              }
-              placeholder="Describe los detalles..."
-              className="w-full mt-1 bg-transparent border border-gray-400 rounded-md p-2 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-white"
-            />
-          </div>
+          {/* ESTABLECIMIENTO */}
+          <div>
+            <label className="text-white font-semibold">
+              Nombre del establecimiento:
+            </label>
 
-          {/* PRECIO */}
-          <div className="w-[90%]">
-            <label className="text-xs text-gray-300">Precio (€)</label>
-            <input
-              type="number"
-              value={form.price}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setForm({...form, price: Number(e.target.value)})
-              }
-              className="w-full mt-1 bg-transparent border border-gray-400 rounded-md p-2 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-white"
-              required
-            />
-          </div>
-
-          {/* ID */}
-          <div className="w-[90%]">
-            <label className="text-xs text-gray-300">ID del Establecimiento</label>
             <input
               type="text"
               value={form.establishmentId}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setForm({...form, establishmentId: e.target.value})
-              }
-              className="w-full mt-1 bg-transparent border border-gray-400 rounded-md p-2 text-sm text-white placeholder-gray-300 focus:outline-none focus:border-white"
+              onChange={(e)=>setForm({...form,establishmentId:e.target.value})}
+              className="w-full mt-2 p-3 rounded-md bg-[#244a6a] text-white border border-gray-400"
               required
+            />
+          </div>
+
+          {/* PRECIO FORMATEADO */}
+          <div>
+            <label className="text-white font-semibold">
+              Precio:
+            </label>
+
+            <input
+              type="text"
+              value={form.price}
+              onChange={(e)=>{
+                const raw = e.target.value.replace(/\D/g, "")
+
+                if (!raw) {
+                  setForm({...form, price:""})
+                  return
+                }
+
+                const formatted = formatCurrency(raw)
+                setForm({...form, price: formatted})
+              }}
+              placeholder="$0.00"
+              className="w-full mt-2 p-3 rounded-md bg-[#244a6a] text-white border border-gray-400"
+              required
+            />
+          </div>
+
+        </div>
+
+        {/* DERECHA */}
+        <div className="flex flex-col justify-between">
+
+          {/* DESCRIPCIÓN */}
+          <div>
+            <label className="text-white font-semibold">
+              Describe el servicio
+            </label>
+
+            <textarea
+              value={form.description}
+              onChange={(e)=>setForm({...form,description:e.target.value})}
+              className="w-full mt-2 h-[180px] p-3 rounded-md bg-[#244a6a] text-white border border-gray-400"
             />
           </div>
 
           {/* BOTÓN */}
-          <button 
-            type="submit"
-            className="w-[90%] mt-2 bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 font-semibold py-2 rounded-md hover:opacity-90"
-          >
-            Crear Servicio
-          </button>
-
-        </form>
-
-        {message && (
-          <div className={`mt-4 text-center text-sm p-2 rounded-lg ${
-            message.includes("correctamente") 
-            ? "bg-green-600" 
-            : "bg-red-600"
-          }`}>
-            {message}
+          <div className="flex justify-center mt-4">
+            <button
+              type="submit"
+              className="bg-gray-400 text-white px-8 py-3 rounded-md font-bold text-lg"
+            >
+              Añadir nuevo Servicio
+            </button>
           </div>
-        )}
 
-      </div>
+        </div>
+
+      </form>
+
+      {/* MENSAJE */}
+      {message && (
+        <div className={`mt-4 text-white px-4 py-2 rounded ${
+          message.includes("correctamente") ? "bg-green-600" : "bg-red-600"
+        }`}>
+          {message}
+        </div>
+      )}
+
     </div>
   )
 }
